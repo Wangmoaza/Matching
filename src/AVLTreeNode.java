@@ -1,78 +1,94 @@
-import java.util.LinkedList;
+import java.lang.Math;
 
-public class AVLTreeNode {
+public class AVLTreeNode<T extends Comparable<T>> {
 	
-	private AVLitem item;
-	private AVLTreeNode leftChild;
-	private AVLTreeNode rightChild;
+	private T item;
+	private AVLTreeNode<T> parent;
+	private AVLTreeNode<T> leftChild;
+	private AVLTreeNode<T> rightChild;
 	private int leftHeight;
 	private int rightHeight;
-	private int heightDiff;
+	private int heightDiff; // leftHeight-rightHeight
 	
-	public AVLTreeNode()
+	public AVLTreeNode(T newItem)
 	{
-		
+		this.item = newItem;
+		this.parent = this.leftChild = this.rightChild = null;
+		leftHeight = 0;
+		rightHeight = 0;
+		heightDiff = 0;
 	}
 	
-	class AVLitem implements Comparable<AVLitem>
+	public AVLTreeNode(T newItem, AVLTreeNode<T> leftChild, AVLTreeNode<T> rightChild)
 	{
-		private String substring;
-		private LinkedList<Coordinate> list;
-		
-		public AVLitem(String substring, Coordinate coord)
-		{
-			this.substring = substring;
-			list.add(coord);
-		}
-		
-		public String getString()
-		{
-			return substring;
-		}
-		
-		public int compareTo(AVLitem other)
-		{
-			return substring.compareTo(other.getString());
-		}
+		this.item = newItem;
+		this.parent = null;
+		this.leftChild = leftChild;
+		this.rightChild = rightChild;
 	}
 	
-	class Coordinate implements Comparable<Coordinate>
+	public AVLTreeNode(T newItem, AVLTreeNode<T> parent, AVLTreeNode<T> leftChild, AVLTreeNode<T> rightChild)
 	{
-		private int line;
-		private int place;
+		this.item = newItem;
+		this.parent = parent;
+		this.leftChild = leftChild;
+		this.rightChild = rightChild;
+	}
+	
+	public T getItem()
+	{
+		return item;
+	}
+	
+	public AVLTreeNode<T> getRight()
+	{
+		return rightChild;
+	}
+	
+	public AVLTreeNode<T> getLeft()
+	{
+		return leftChild;
+	}
+	
+	public AVLTreeNode<T> getParent()
+	{
+		return parent;
+	}
+	
+	public void setItem(T newItem)
+	{
+		this.item = newItem;
+	}
+	
+	public void setLeft(AVLTreeNode<T> left)
+	{
+		leftChild = left;
+	}
+	
+	public void setRight(AVLTreeNode<T> right)
+	{
+		rightChild = right;
+	}
+	
+	public void setParent(AVLTreeNode<T> parent)
+	{
+		this.parent = parent;
+	}
+	
+	private int height(AVLTreeNode<T> node)
+	{
+		int height = 0;
+		if (node != null)
+			height = 1 + Math.max(height(node.getLeft()), height(node.getRight()));
 		
-		public Coordinate(int line, int place)
-		{
-			this.line = line;
-			this.place = place;
-		}
-		
-		public int getLine()
-		{
-			return line;
-		}
-		
-		public int getPlace()
-		{
-			return place;
-		}
-		
-		public int compareTo(Coordinate other)
-		{
-			if (line != other.getLine())
-				return line > other.getLine() ? 1 : -1;
-			
-			else if (place != other.getPlace())
-				return place > other.getPlace() ? 1 : -1;
-			
-			else
-				return 0;	
-		}
-		
-		@Override
-		public String toString()
-		{
-			return "(" + line + ", " + place + ")";
-		}
+		return height;
+	}
+	
+	public int get_heightDiff()
+	{
+		leftHeight = height(leftChild);
+		rightHeight = height(rightChild);
+		heightDiff = leftHeight - rightHeight;
+		return heightDiff;
 	}
 }
