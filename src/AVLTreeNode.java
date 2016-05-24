@@ -1,16 +1,17 @@
 import java.lang.Math;
 
-public class AVLTreeNode<T extends Comparable<T>> {
+// parent field를 없애야하나?
+public class AVLTreeNode {
 	
-	private T item;
-	private AVLTreeNode<T> parent;
-	private AVLTreeNode<T> leftChild;
-	private AVLTreeNode<T> rightChild;
+	private Object item;
+	private AVLTreeNode parent;
+	private AVLTreeNode leftChild;
+	private AVLTreeNode rightChild;
 	private int leftHeight;
 	private int rightHeight;
 	private int heightDiff; // leftHeight-rightHeight
 	
-	public AVLTreeNode(T newItem)
+	public AVLTreeNode(Object newItem)
 	{
 		this.item = newItem;
 		this.parent = this.leftChild = this.rightChild = null;
@@ -19,7 +20,7 @@ public class AVLTreeNode<T extends Comparable<T>> {
 		heightDiff = 0;
 	}
 	
-	public AVLTreeNode(T newItem, AVLTreeNode<T> leftChild, AVLTreeNode<T> rightChild)
+	public AVLTreeNode(Object newItem, AVLTreeNode leftChild, AVLTreeNode rightChild)
 	{
 		this.item = newItem;
 		this.parent = null;
@@ -27,7 +28,7 @@ public class AVLTreeNode<T extends Comparable<T>> {
 		this.rightChild = rightChild;
 	}
 	
-	public AVLTreeNode(T newItem, AVLTreeNode<T> parent, AVLTreeNode<T> leftChild, AVLTreeNode<T> rightChild)
+	public AVLTreeNode(Object newItem, AVLTreeNode parent, AVLTreeNode leftChild, AVLTreeNode rightChild)
 	{
 		this.item = newItem;
 		this.parent = parent;
@@ -35,47 +36,47 @@ public class AVLTreeNode<T extends Comparable<T>> {
 		this.rightChild = rightChild;
 	}
 	
-	public T getItem()
+	public Object getItem()
 	{
 		return item;
 	}
 	
-	public AVLTreeNode<T> getRight()
+	public AVLTreeNode getRight()
 	{
 		return rightChild;
 	}
 	
-	public AVLTreeNode<T> getLeft()
+	public AVLTreeNode getLeft()
 	{
 		return leftChild;
 	}
 	
-	public AVLTreeNode<T> getParent()
+	public AVLTreeNode getParent()
 	{
 		return parent;
 	}
 	
-	public void setItem(T newItem)
+	public void setItem(Object newItem)
 	{
 		this.item = newItem;
 	}
 	
-	public void setLeft(AVLTreeNode<T> left)
+	public void setLeft(AVLTreeNode left)
 	{
 		leftChild = left;
 	}
 	
-	public void setRight(AVLTreeNode<T> right)
+	public void setRight(AVLTreeNode right)
 	{
 		rightChild = right;
 	}
 	
-	public void setParent(AVLTreeNode<T> parent)
+	public void setParent(AVLTreeNode parent)
 	{
 		this.parent = parent;
 	}
 	
-	private int height(AVLTreeNode<T> node)
+	private int height(AVLTreeNode node)
 	{
 		int height = 0;
 		if (node != null)
