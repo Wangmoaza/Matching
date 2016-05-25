@@ -42,8 +42,7 @@ public class HashTable {
 	
 	public AVLTree search(String key)
 	{
-		int index = hash(key);
-		return table[index];
+		return table[hash(key)];
 	}
 	
 	public void remove(String key)

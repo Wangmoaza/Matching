@@ -5,7 +5,8 @@ public class Matching
 	public static void main(String args[])
 	{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+		HashTable ht = new HashTable();
+		
 		while (true)
 		{
 			try
@@ -14,7 +15,7 @@ public class Matching
 				if (input.compareTo("QUIT") == 0)
 					break;
 
-				command(input);
+				command(ht, input);
 			}
 			catch (IOException e)
 			{
@@ -23,9 +24,29 @@ public class Matching
 		}
 	}
 
-	private static void command(String input)
+	private static void command(HashTable ht, String input)
 	{
-		// TODO : 아래 문장을 삭제하고 구현해라.
-		System.out.println("<< command 함수에서 " + input + " 명령을 처리할 예정입니다 >>");
+		// Modification from MovieDB skeleton code
+		try
+		{
+			Command command = null;
+			
+			if (input.startsWith("<")) 
+				command = new InputCmd();
+			
+			else if (input.startsWith("@"))
+				command = new PrintCmd();
+			
+			else if (input.startsWith("?"))
+				command = new PatternCmd();
+			
+			command.parse(input);
+			command.apply(ht);
+		}
+		
+		catch (Exception e)
+		{
+			System.out.println(e.toString());
+		}
 	}
 }
