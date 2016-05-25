@@ -3,7 +3,7 @@ import java.lang.Math;
 // parent field를 없애야하나?
 public class AVLTreeNode {
 	
-	private Object item;
+	private AVLItem item;
 	private AVLTreeNode parent;
 	private AVLTreeNode leftChild;
 	private AVLTreeNode rightChild;
@@ -11,7 +11,7 @@ public class AVLTreeNode {
 	private int rightHeight;
 	private int heightDiff; // leftHeight-rightHeight
 	
-	public AVLTreeNode(Object newItem)
+	public AVLTreeNode(AVLItem newItem)
 	{
 		this.item = newItem;
 		this.parent = this.leftChild = this.rightChild = null;
@@ -20,7 +20,7 @@ public class AVLTreeNode {
 		heightDiff = 0;
 	}
 	
-	public AVLTreeNode(Object newItem, AVLTreeNode leftChild, AVLTreeNode rightChild)
+	public AVLTreeNode(AVLItem newItem, AVLTreeNode leftChild, AVLTreeNode rightChild)
 	{
 		this.item = newItem;
 		this.parent = null;
@@ -28,7 +28,7 @@ public class AVLTreeNode {
 		this.rightChild = rightChild;
 	}
 	
-	public AVLTreeNode(Object newItem, AVLTreeNode parent, AVLTreeNode leftChild, AVLTreeNode rightChild)
+	public AVLTreeNode(AVLItem newItem, AVLTreeNode parent, AVLTreeNode leftChild, AVLTreeNode rightChild)
 	{
 		this.item = newItem;
 		this.parent = parent;
@@ -36,7 +36,7 @@ public class AVLTreeNode {
 		this.rightChild = rightChild;
 	}
 	
-	public Object getItem()
+	public AVLItem getItem()
 	{
 		return item;
 	}
@@ -56,7 +56,7 @@ public class AVLTreeNode {
 		return parent;
 	}
 	
-	public void setItem(Object newItem)
+	public void setItem(AVLItem newItem)
 	{
 		this.item = newItem;
 	}
