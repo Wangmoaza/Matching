@@ -32,13 +32,6 @@ public class AVLItem implements Comparable<AVLItem> {
 		return list;
 	}
 	
-	public void resetAllFlags()
-	{
-		for (Coordinate coord : list)
-		{
-			coord.resetFlag();
-		}
-	}
 	public int compareTo(AVLItem other)
 	{
 		return substring.compareTo(other.getSubstring());

@@ -1,5 +1,6 @@
 import java.io.*;
 import java.lang.Integer;
+import java.util.ArrayList;
 
 public interface Command
 {
@@ -81,17 +82,15 @@ class PatternCmd implements Command {
 	public void parse(String input)
 	{
 		pattern = input.substring(2);
-		int num;
+		int num, index;
 		
 		// determine subPattern array size
 		if (pattern.length() % SUBSTR_LEN == 0)
 			num = pattern.length() / SUBSTR_LEN;
-		
 		else
 			num = (pattern.length() / SUBSTR_LEN) + 1;
 		
 		subPatterns = new String[num];
-		int index;
 		
 		for (index = 0; index < subPatterns.length - 1; index++)
 		{
@@ -101,33 +100,47 @@ class PatternCmd implements Command {
 		// handle leftover, 남은 길이에 따라 이전 subpattern과 겹치게 된다.
 		subPatterns[index] = pattern.substring(pattern.length() - SUBSTR_LEN);
 		overlap = (SUBSTR_LEN - (pattern.length() % SUBSTR_LEN)) % SUBSTR_LEN;
-		System.out.println("overlap: " + overlap);
+		//System.out.println("overlap: " + overlap);
 	}
 	
 	public void apply(HashTable ht)
 	{
-		System.out.println("array length: " + subPatterns.length);
-		
+		//System.out.println("array length: " + subPatterns.length);
 		AVLItem baseItem = ht.search(subPatterns[0]).search(subPatterns[0]);
-		baseItem.resetAllFlags(); // 모두 true로 setting
 		int i;
 		
+		if (baseItem == null)
+		{
+			System.out.println("(0, 0)");
+			return;
+		}
+		
+		ArrayList<Coordinate> coordList = new ArrayList<>(baseItem.getList());
+		
+		// 마지막 substring 전까지 처리
 		for (i = 1; i < subPatterns.length - 1; i++)
 		{
 			AVLItem currItem = ht.search(subPatterns[i]).search(subPatterns[i]);
-			System.out.println(currItem.getSubstring());
-			for (Coordinate coord : currItem.getList())
-			{
-				for (Coordinate baseCoord : baseItem.getList())
-				{
-					if (baseCoord.getFlag()) // true 일때만
-					{
-						baseCoord.setFlag(baseCoord.nearTo(coord, SUBSTR_LEN * i));
-						System.out.println(baseCoord.getFlag());
-					}
-				}
-			}
 			
+			if (currItem == null)
+			{
+				System.out.println("(0, 0)");
+				return;
+			}
+			//System.out.println(currItem.getSubstring());
+			for (Coordinate baseCoord : baseItem.getList())
+			{
+				int flag = 0;
+				
+				for (Coordinate currCoord : currItem.getList())
+				{
+					if (baseCoord.nearTo(currCoord, SUBSTR_LEN * i)) // true 일때만
+						flag++;
+				}
+				
+				if (flag == 0)
+					coordList.remove(baseCoord);
+			}
 		}
 		
 		// 마지막 substring 처리
@@ -135,30 +148,36 @@ class PatternCmd implements Command {
 		{
 			int last = subPatterns.length - 1;
 			AVLItem currItem = ht.search(subPatterns[last]).search(subPatterns[last]);
+			if (currItem == null)
+			{
+				System.out.println("(0, 0)");
+				return;
+			}
 			for (Coordinate baseCoord : baseItem.getList())
 			{
+				int flag = 0;
+				
 				for (Coordinate currCoord : currItem.getList())
 				{
-					// FIXME
-					System.out.println(baseCoord.toString() + " " + baseCoord.getFlag());
-					System.out.println("coord: " + currCoord.toString());
-					if (baseCoord.getFlag()) // true 일때만
-					{
-						//System.out.println(SUBSTR_LEN * i - overlap);
-						baseCoord.setFlag(baseCoord.nearTo(currCoord, SUBSTR_LEN * i - overlap ));
-					}
+					//System.out.println("base: " + baseCoord.toString());
+					//System.out.println("curr: " + currCoord.toString());
+					
+					if (baseCoord.nearTo(currCoord, SUBSTR_LEN * i - overlap )) // true 일때만
+						flag++;
+					
+					//System.out.println(flag);
+					
 				}
+				if (flag == 0)
+					coordList.remove(baseCoord);
 			}
 		}
+		
+		// print result
 		String result = "";
-		// baseItem에서 pattern과 일치하는 것만 true flag
-		for (Coordinate baseCoord : baseItem.getList())
-		{
-			// FIXME
-			if (baseCoord.getFlag())
-				result += baseCoord.toString() + " ";
-				
-		}
+
+		for (Coordinate coord : coordList)
+			result += coord.toString() + " ";
 		
 		if (!result.isEmpty())
 			System.out.println(result.substring(0, result.length()-1));

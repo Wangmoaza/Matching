@@ -1,10 +1,8 @@
 import java.lang.Math;
 
-// parent field를 없애야하나?
 public class AVLTreeNode {
 	
 	private AVLItem item;
-	private AVLTreeNode parent;
 	private AVLTreeNode leftChild;
 	private AVLTreeNode rightChild;
 	private int leftHeight;
@@ -14,7 +12,7 @@ public class AVLTreeNode {
 	public AVLTreeNode(AVLItem newItem)
 	{
 		this.item = newItem;
-		this.parent = this.leftChild = this.rightChild = null;
+		this.leftChild = this.rightChild = null;
 		leftHeight = 0;
 		rightHeight = 0;
 		heightDiff = 0;
@@ -23,15 +21,6 @@ public class AVLTreeNode {
 	public AVLTreeNode(AVLItem newItem, AVLTreeNode leftChild, AVLTreeNode rightChild)
 	{
 		this.item = newItem;
-		this.parent = null;
-		this.leftChild = leftChild;
-		this.rightChild = rightChild;
-	}
-	
-	public AVLTreeNode(AVLItem newItem, AVLTreeNode parent, AVLTreeNode leftChild, AVLTreeNode rightChild)
-	{
-		this.item = newItem;
-		this.parent = parent;
 		this.leftChild = leftChild;
 		this.rightChild = rightChild;
 	}
@@ -51,11 +40,6 @@ public class AVLTreeNode {
 		return leftChild;
 	}
 	
-	public AVLTreeNode getParent()
-	{
-		return parent;
-	}
-	
 	public void setItem(AVLItem newItem)
 	{
 		this.item = newItem;
@@ -69,11 +53,6 @@ public class AVLTreeNode {
 	public void setRight(AVLTreeNode right)
 	{
 		rightChild = right;
-	}
-	
-	public void setParent(AVLTreeNode parent)
-	{
-		this.parent = parent;
 	}
 	
 	private int height(AVLTreeNode node)
