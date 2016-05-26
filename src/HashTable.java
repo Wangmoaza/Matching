@@ -38,7 +38,7 @@ public class HashTable {
 	public void put(String key, AVLItem value)
 	{
 		table[hash(key)].insert(value);
-		System.out.println("hash: " + hash(key));
+		//System.out.println("hash: " + hash(key));
 	}
 	
 	public AVLTree search(String key)

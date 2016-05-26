@@ -35,18 +35,13 @@ class InputCmd implements Command {
 			String thisLine = br.readLine();
 			while (thisLine != null) // read each line
 			{
-				System.out.println("while");
 				for (int i = 0; i < thisLine.length() - SUBSTR_LEN + 1; i++) // parse to substrings
 				{
-					//System.out.println(thisLine.length());
 					String substr = thisLine.substring(i, i + SUBSTR_LEN);
-					//System.out.println(substr);
 					Coordinate coord = new Coordinate(lineNum, i+1); // 1 부터 시작
-					System.out.println(coord);
 					AVLItem item = new AVLItem(substr, coord);
-					System.out.println(item.getSubstring());
+					//System.out.println(coord.toString() + " " + item.getSubstring());
 					ht.put(substr, item); // add to hashtable
-					System.out.println("loop " + i);
 				}
 
 				thisLine = br.readLine();
@@ -86,7 +81,15 @@ class PatternCmd implements Command {
 	public void parse(String input)
 	{
 		pattern = input.substring(2);
-		int num = (pattern.length() / SUBSTR_LEN) + 1;
+		int num;
+		
+		// determine subPattern array size
+		if (pattern.length() % SUBSTR_LEN == 0)
+			num = pattern.length() / SUBSTR_LEN;
+		
+		else
+			num = (pattern.length() / SUBSTR_LEN) + 1;
+		
 		subPatterns = new String[num];
 		int index;
 		
@@ -98,41 +101,55 @@ class PatternCmd implements Command {
 		// handle leftover, 남은 길이에 따라 이전 subpattern과 겹치게 된다.
 		subPatterns[index] = pattern.substring(pattern.length() - SUBSTR_LEN);
 		overlap = (SUBSTR_LEN - (pattern.length() % SUBSTR_LEN)) % SUBSTR_LEN;
+		System.out.println("overlap: " + overlap);
 	}
 	
 	public void apply(HashTable ht)
 	{
+		System.out.println("array length: " + subPatterns.length);
+		
 		AVLItem baseItem = ht.search(subPatterns[0]).search(subPatterns[0]);
 		baseItem.resetAllFlags(); // 모두 true로 setting
 		int i;
+		
 		for (i = 1; i < subPatterns.length - 1; i++)
 		{
 			AVLItem currItem = ht.search(subPatterns[i]).search(subPatterns[i]);
-			
+			System.out.println(currItem.getSubstring());
 			for (Coordinate coord : currItem.getList())
 			{
 				for (Coordinate baseCoord : baseItem.getList())
 				{
 					if (baseCoord.getFlag()) // true 일때만
+					{
 						baseCoord.setFlag(baseCoord.nearTo(coord, SUBSTR_LEN * i));
+						System.out.println(baseCoord.getFlag());
+					}
 				}
 			}
 			
 		}
 		
 		// 마지막 substring 처리
-		int last = subPatterns.length - 1;
-		AVLItem currItem = ht.search(subPatterns[last]).search(subPatterns[last]);
-		for (Coordinate coord : currItem.getList())
+		if (subPatterns.length != 1)
 		{
+			int last = subPatterns.length - 1;
+			AVLItem currItem = ht.search(subPatterns[last]).search(subPatterns[last]);
 			for (Coordinate baseCoord : baseItem.getList())
 			{
-				// FIXME
-				if (baseCoord.getFlag()) // true 일때만
-					baseCoord.setFlag(baseCoord.nearTo(coord, SUBSTR_LEN * i - overlap ));
+				for (Coordinate currCoord : currItem.getList())
+				{
+					// FIXME
+					System.out.println(baseCoord.toString() + " " + baseCoord.getFlag());
+					System.out.println("coord: " + currCoord.toString());
+					if (baseCoord.getFlag()) // true 일때만
+					{
+						//System.out.println(SUBSTR_LEN * i - overlap);
+						baseCoord.setFlag(baseCoord.nearTo(currCoord, SUBSTR_LEN * i - overlap ));
+					}
+				}
 			}
 		}
-		
 		String result = "";
 		// baseItem에서 pattern과 일치하는 것만 true flag
 		for (Coordinate baseCoord : baseItem.getList())
@@ -143,6 +160,9 @@ class PatternCmd implements Command {
 				
 		}
 		
-		System.out.println(result.substring(0, result.length()-1));
+		if (!result.isEmpty())
+			System.out.println(result.substring(0, result.length()-1));
+		else
+			System.out.println("(0, 0)");
 	}
 }

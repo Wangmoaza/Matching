@@ -16,7 +16,6 @@ public class AVLTree {
 	{
 		// copy from lecture 11 slide
 		root = insertItem(root, newItem);
-		System.out.println("AVLTRee: insert");
 	}
 	
 	public AVLItem search(String searchKey)
@@ -44,8 +43,7 @@ public class AVLTree {
 		if (root == null)
 			return "EMPTY";
 		
-		String traversal = "";
-		traversal = preorder_traversal(traversal, root);
+		String traversal = preorder_traversal(new String(), root);
 		
 		return traversal.substring(0, traversal.length()-1); // leave out last " "
 	}
@@ -55,9 +53,9 @@ public class AVLTree {
 		// FIXME
 		if (rootNode != null)
 		{
-			traversal += rootNode.getItem().getSubstring() + " ";
-			preorder_traversal(traversal, rootNode.getLeft());
-			preorder_traversal(traversal, rootNode.getRight());
+			traversal = traversal + rootNode.getItem().getSubstring() + " ";
+			traversal = preorder_traversal(traversal, rootNode.getLeft());
+			traversal = preorder_traversal(traversal, rootNode.getRight());
 		}
 		
 		return traversal;
@@ -69,9 +67,6 @@ public class AVLTree {
 		if (rootNode == null)
 		{
 			rootNode = new AVLTreeNode(newItem);
-			// FIXME 아래꺼 필요한가?
-			//rootNode = balance(rootNode);
-			System.out.println("AVLTree: new node");
 		}
 		
 		else if (newItem.compareTo(rootNode.getItem()) < 0)
@@ -80,7 +75,6 @@ public class AVLTree {
 			rootNode = balance(rootNode);
 		}
 			
-		
 		else if (newItem.compareTo(rootNode.getItem()) > 0)
 		{
 			rootNode.setRight(insertItem(rootNode.getRight(), newItem));
@@ -90,7 +84,6 @@ public class AVLTree {
 		else // 같은 substring을 갖는 item이 있을시 list 뒤에 좌표를 추가한다.
 		{
 			rootNode.getItem().addToList(newItem);
-			System.out.println("AVLTree: existing node");
 		}
 		
 		return rootNode;
@@ -153,8 +146,6 @@ public class AVLTree {
 		// leftChild의 right subtree를 node의 leftChild로 만듦
 		// node를 원래 leftChild의 rightChild로 만듦
 		// 회전으로 인해 root가 된 child를 return
-		if (node == null)
-			System.out.println("null node");
 		AVLTreeNode child = node.getLeft();
 		node.setLeft(child.getRight()); 
 		child.setRight(node);
