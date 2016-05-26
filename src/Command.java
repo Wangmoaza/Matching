@@ -8,7 +8,7 @@ public interface Command
 	static int SUBSTR_LEN = 6;
 	
 	void parse(String input);
-	void apply(HashTable ht) throws Exception;
+	void apply(HashTable ht);
 }
 
 class InputCmd implements Command {
@@ -109,79 +109,71 @@ class PatternCmd implements Command {
 		AVLItem baseItem = ht.search(subPatterns[0]).search(subPatterns[0]);
 		int i;
 		
-		if (baseItem == null)
+		try
 		{
-			System.out.println("(0, 0)");
-			return;
-		}
-		
-		ArrayList<Coordinate> coordList = new ArrayList<>(baseItem.getList());
-		
-		// 마지막 substring 전까지 처리
-		for (i = 1; i < subPatterns.length - 1; i++)
-		{
-			AVLItem currItem = ht.search(subPatterns[i]).search(subPatterns[i]);
+			ArrayList<Coordinate> coordList = new ArrayList<>(baseItem.getList());
 			
-			if (currItem == null)
+			// 마지막 substring 전까지 처리
+			for (i = 1; i < subPatterns.length - 1; i++)
 			{
-				System.out.println("(0, 0)");
-				return;
-			}
-			//System.out.println(currItem.getSubstring());
-			for (Coordinate baseCoord : baseItem.getList())
-			{
-				int flag = 0;
-				
-				for (Coordinate currCoord : currItem.getList())
+				AVLItem currItem = ht.search(subPatterns[i]).search(subPatterns[i]);
+				//System.out.println(currItem.getSubstring());
+				for (Coordinate baseCoord : baseItem.getList())
 				{
-					if (baseCoord.nearTo(currCoord, SUBSTR_LEN * i)) // true 일때만
-						flag++;
+					int flag = 0;
+					
+					for (Coordinate currCoord : currItem.getList())
+					{
+						if (baseCoord.nearTo(currCoord, SUBSTR_LEN * i)) // true 일때만
+							flag++;
+					}
+					
+					if (flag == 0)
+						coordList.remove(baseCoord);
 				}
-				
-				if (flag == 0)
-					coordList.remove(baseCoord);
 			}
+			
+			// 마지막 substring 처리
+			if (subPatterns.length != 1)
+			{
+				int last = subPatterns.length - 1;
+				AVLItem currItem = ht.search(subPatterns[last]).search(subPatterns[last]);
+				
+				for (Coordinate baseCoord : baseItem.getList())
+				{
+					int flag = 0;
+					
+					for (Coordinate currCoord : currItem.getList())
+					{
+						//System.out.println("base: " + baseCoord.toString());
+						//System.out.println("curr: " + currCoord.toString());
+						
+						if (baseCoord.nearTo(currCoord, SUBSTR_LEN * i - overlap )) // true 일때만
+							flag++;
+						
+						//System.out.println(flag);
+						
+					}
+					if (flag == 0)
+						coordList.remove(baseCoord);
+				}
+			}
+			
+			// print result
+			String result = "";
+		
+			for (Coordinate coord : coordList)
+				result += coord.toString() + " ";
+			
+			if (!result.isEmpty())
+				System.out.println(result.substring(0, result.length()-1));
+			else
+				System.out.println("(0, 0)");
 		}
 		
-		// 마지막 substring 처리
-		if (subPatterns.length != 1)
+		catch (NullPointerException e)
 		{
-			int last = subPatterns.length - 1;
-			AVLItem currItem = ht.search(subPatterns[last]).search(subPatterns[last]);
-			if (currItem == null)
-			{
-				System.out.println("(0, 0)");
-				return;
-			}
-			for (Coordinate baseCoord : baseItem.getList())
-			{
-				int flag = 0;
-				
-				for (Coordinate currCoord : currItem.getList())
-				{
-					//System.out.println("base: " + baseCoord.toString());
-					//System.out.println("curr: " + currCoord.toString());
-					
-					if (baseCoord.nearTo(currCoord, SUBSTR_LEN * i - overlap )) // true 일때만
-						flag++;
-					
-					//System.out.println(flag);
-					
-				}
-				if (flag == 0)
-					coordList.remove(baseCoord);
-			}
-		}
-		
-		// print result
-		String result = "";
-
-		for (Coordinate coord : coordList)
-			result += coord.toString() + " ";
-		
-		if (!result.isEmpty())
-			System.out.println(result.substring(0, result.length()-1));
-		else
 			System.out.println("(0, 0)");
+		}
 	}
 }
