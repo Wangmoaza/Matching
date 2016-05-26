@@ -16,6 +16,7 @@ public class AVLTree {
 	{
 		// copy from lecture 11 slide
 		root = insertItem(root, newItem);
+		System.out.println("AVLTRee: insert");
 	}
 	
 	public AVLItem search(String searchKey)
@@ -68,6 +69,9 @@ public class AVLTree {
 		if (rootNode == null)
 		{
 			rootNode = new AVLTreeNode(newItem);
+			// FIXME 아래꺼 필요한가?
+			//rootNode = balance(rootNode);
+			System.out.println("AVLTree: new node");
 		}
 		
 		else if (newItem.compareTo(rootNode.getItem()) < 0)
@@ -86,12 +90,11 @@ public class AVLTree {
 		else // 같은 substring을 갖는 item이 있을시 list 뒤에 좌표를 추가한다.
 		{
 			rootNode.getItem().addToList(newItem);
+			System.out.println("AVLTree: existing node");
 		}
 		
 		return rootNode;
 	}
-	
-
 	
 	private AVLTreeNode searchItem(AVLTreeNode rootNode, String searchKey)
 	{
@@ -150,6 +153,8 @@ public class AVLTree {
 		// leftChild의 right subtree를 node의 leftChild로 만듦
 		// node를 원래 leftChild의 rightChild로 만듦
 		// 회전으로 인해 root가 된 child를 return
+		if (node == null)
+			System.out.println("null node");
 		AVLTreeNode child = node.getLeft();
 		node.setLeft(child.getRight()); 
 		child.setRight(node);
@@ -170,7 +175,6 @@ public class AVLTree {
 	
 	private AVLTreeNode rotate_LR(AVLTreeNode node)
 	{
-		// TODO
 		// node의 leftChild의 right subtree에 추가된 경우,
 		// left subtree에서 왼쪽 1회전 - 전체에서 오른쪽 1회전
 		AVLTreeNode child = node.getLeft();
@@ -181,10 +185,9 @@ public class AVLTree {
 	
 	private AVLTreeNode rotate_RL(AVLTreeNode node)
 	{
-		// TODO
 		// node의 rightChild의 left subtree에 추가된 경우,
 		// right subtree에서 오른쪽 1회전 - 전체에서 왼쪽 1회전
-		AVLTreeNode child = node.getLeft();
+		AVLTreeNode child = node.getRight();
 		node.setRight(rotate_LL(child));
 		AVLTreeNode newRoot = rotate_RR(node);
 		return newRoot;

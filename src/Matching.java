@@ -46,7 +46,8 @@ public class Matching
 		
 		catch (Exception e)
 		{
-			System.out.println(e.toString());
+			System.out.println("Error in command");
+			e.printStackTrace();
 		}
 	}
 }

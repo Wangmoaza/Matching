@@ -8,6 +8,7 @@ public class AVLItem implements Comparable<AVLItem> {
 	public AVLItem(String substring, Coordinate coord)
 	{
 		this.substring = substring;
+		list = new LinkedList<>();
 		list.add(coord);
 	}
 	
@@ -26,6 +27,18 @@ public class AVLItem implements Comparable<AVLItem> {
 		list.add(item.getFirstCoord());
 	}
 	
+	public LinkedList<Coordinate> getList()
+	{
+		return list;
+	}
+	
+	public void resetAllFlags()
+	{
+		for (Coordinate coord : list)
+		{
+			coord.resetFlag();
+		}
+	}
 	public int compareTo(AVLItem other)
 	{
 		return substring.compareTo(other.getSubstring());

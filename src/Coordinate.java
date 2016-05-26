@@ -2,11 +2,13 @@ public class Coordinate implements Comparable<Coordinate>
 	{
 		private int line;
 		private int place;
+		private boolean flag; // pattern 찾을때 활용
 		
 		public Coordinate(int line, int place)
 		{
 			this.line = line;
 			this.place = place;
+			this.flag = true;
 		}
 		
 		public int getLine()
@@ -34,6 +36,21 @@ public class Coordinate implements Comparable<Coordinate>
 		public boolean nearTo(Coordinate other, int offset)
 		{
 			return (line == other.getLine()) && (other.getPlace() == (place + offset));
+		}
+		
+		public void setFlag(boolean flag)
+		{
+			this.flag = flag;
+		}
+		
+		public boolean getFlag()
+		{
+			return flag;
+		}
+		
+		public void resetFlag()
+		{
+			flag = true;
 		}
 		
 		@Override
